@@ -9,9 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace UrLocal.Migrations
 {
     [DbContext(typeof(UrLocalContext))]
-    [Migration("20191017202034_InitialCreate")]
+    [Migration("20191018030523_InitialCreate")]
     partial class InitialCreate
     {
+        // Builds the database model
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -19,7 +20,7 @@ namespace UrLocal.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
+            // creates the more specifically Bars and creates each attribute and names them in terms of a database
             modelBuilder.Entity("UrLocal.Bars", b =>
                 {
                     b.Property<int>("barId")
@@ -64,7 +65,7 @@ namespace UrLocal.Migrations
 
                     b.ToTable("bars");
                 });
-
+            // creates the more specifically Users and creates each attribute and names them in terms of a database
             modelBuilder.Entity("UrLocal.Users", b =>
                 {
                     b.Property<int>("userId")

@@ -27,15 +27,17 @@ namespace UrLocal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Adds in all of the controllers that are relevant and what they pass through
             services.AddControllers();
             //Adds in the database in order to get this running
             services.AddDbContext<UrLocalContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql("Host=localhost;Port=5432;Database=postgres;User ID=henrymrrtt;Password=Ories-10;"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // makes sure that all of tje environment and that the app is accepting Http requests.
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

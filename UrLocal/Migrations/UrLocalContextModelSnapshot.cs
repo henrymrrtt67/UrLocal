@@ -65,7 +65,7 @@ namespace UrLocal.Migrations
 
             modelBuilder.Entity("UrLocal.Users", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("userId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -94,7 +94,7 @@ namespace UrLocal.Migrations
                     b.Property<string>("userName")
                         .HasColumnType("text");
 
-                    b.HasKey("id");
+                    b.HasKey("userId");
 
                     b.ToTable("users");
                 });

@@ -26,9 +26,13 @@
     <Compile Remove="DBLinkAPI.cs" />
     <Compile Remove="Migrations\20191017201831_InitialCreate.cs" />
     <Compile Remove="Migrations\20191017201831_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20191017202034_InitialCreate.cs" />
+    <Compile Remove="Migrations\20191017202034_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\UrLocalContextModelSnapshot.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Data\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

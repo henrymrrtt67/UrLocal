@@ -12,8 +12,8 @@ namespace UrLocal
         // Primary Key barId
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-
-
+        public int barId { get; set; }
+      
         // Other Attributes in my Bars table.
         public string barName{ get; set; }
 

@@ -20,6 +20,7 @@ namespace UrLocal
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    //links to the startup file
                     webBuilder.UseStartup<Startup>();
                 });
     }
