@@ -12,7 +12,7 @@ namespace UrLocal
     public class ValuesController : Controller
     {
         // GET: api/values
-        [HttpGet("UserLogin: {username, password}")]
+        [HttpGet("{username,password}", Name="getUser")]
         public int Get(string username, string password)
         {
             UrLocalDB conn = new UrLocalDB();
@@ -20,12 +20,12 @@ namespace UrLocal
         }
 
         // GET api/values
-        [HttpGet("ClosestBars: {id}")]
-        public (string,string,string) Get(int id)
+        [HttpGet("{id}", Name="getBars")]
+        public (string,string) Get(int id)
         {
             UrLocalDB conn = new UrLocalDB();
             (List<int> bar_id, List<int> craftBeers, List<int> complexities, List<int> wineOrBeers,
-            List<int[]> checkBox, List<double> lowerQuartileMeal, List<double> lowerQuartileBeer, List<double> upperQuartileMeal,
+            List<bool[]> checkBox, List<double> lowerQuartileMeal, List<double> lowerQuartileBeer, List<double> upperQuartileMeal,
             List<double> upperQuartileBeer) = conn.get_bar();
             K_Nearest_Neighbour knn = new K_Nearest_Neighbour();
             knn.training(id);
@@ -33,11 +33,11 @@ namespace UrLocal
             for (int i = 0; i < bar_id.Count; i++) bestBar = knn.testing(bar_id[i],craftBeers[i],complexities[i],
                 wineOrBeers[i], checkBox[i],lowerQuartileMeal[i],lowerQuartileBeer[i],upperQuartileMeal[i],upperQuartileBeer[i]);
             (string bar_name, string bar_location)=conn.bar_location(bestBar);
-            return ("","","");
+            return (bar_name,bar_location);
         }
 
         // POST api/values
-        [HttpPost("addBar: {barname}")]
+        [HttpPost("{id}", Name="addBar")]
         public bool Post(string barname, int craft_slide, int complexity,
         int wineOrBeer, int wineCheck, int beerCheck, int spiritCheck, double lowerQuartileMeal,
         double lowerQuartileBeer, double upperQuartileMeal, double upperQuartileBeer, string location)
@@ -47,7 +47,7 @@ namespace UrLocal
             lowerQuartileBeer, upperQuartileMeal, upperQuartileBeer, location);
         }
 
-        [HttpPost("addUser: {username}")]
+        [HttpPost("{id}",Name ="addUser")]
         public bool Post(string username, string password, int craft_slide, int complexity,
         int wineOrBeer, int wineCheck, int beerCheck, int spiritCheck, double priceRange)
         {

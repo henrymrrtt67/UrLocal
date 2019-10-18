@@ -9,5 +9,26 @@
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="EmptyClass.cs" />
+    <Compile Remove="GetBar.cs" />
+    <Compile Remove="webAPIConfig.cs" />
+    <Compile Remove="values.cs" />
+    <Compile Remove="Controllers\ValuesController.cs" />
+    <Compile Remove="DBLinkAPI.cs" />
+    <Compile Remove="Migrations\20191017201831_InitialCreate.cs" />
+    <Compile Remove="Migrations\20191017201831_InitialCreate.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Data\" />
   </ItemGroup>
 </Project>

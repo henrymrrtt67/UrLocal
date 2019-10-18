@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Data.UrLocal;
 
 namespace UrLocal
 {
@@ -26,6 +28,9 @@ namespace UrLocal
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            //Adds in the database in order to get this running
+            services.AddDbContext<UrLocalContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
