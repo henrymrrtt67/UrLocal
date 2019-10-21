@@ -29,6 +29,8 @@ namespace UrLocal
         {
             //Adds in all of the controllers that are relevant and what they pass through
             services.AddControllers();
+
+            services.AddCors();
             //Adds in the database in order to get this running
             services.AddDbContext<UrLocalContext>(options =>
             options.UseNpgsql("Host=localhost;Port=5432;Database=postgres;User ID=henrymrrtt;Password=Ories-10;"));
@@ -42,6 +44,8 @@ namespace UrLocal
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder=>builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseHttpsRedirection();
 
