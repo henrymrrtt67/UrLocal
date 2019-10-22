@@ -13,11 +13,11 @@ namespace UrLocal
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int barId { get; set; }
-      
-        // Other Attributes in my Bars table.
-        public string barName{ get; set; }
 
         public string barLocation { get; set; }
+
+        // Other Attributes in my Bars table.
+        public string barName{ get; set; }
 
         public int craftSlide { get; set; }
 
@@ -36,6 +36,7 @@ namespace UrLocal
         public double uqMeal { get; set; }
 
         public double uqBeer { get; set; }
+
 
     }
 }

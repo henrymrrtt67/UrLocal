@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -47,6 +48,7 @@ namespace UrLocal.Controllers
          * database and added through this.
          * Make sure this works with the data entry Front end as this is all it will probably ever be used for.
          */
+        [Produces("application/json")]
         [HttpPost]
         public async Task<IActionResult> AddBar([FromBody] Bars objBars)
         {
