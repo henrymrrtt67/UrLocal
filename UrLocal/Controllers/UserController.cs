@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Data.UrLocal;
+using UrLocal.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,9 +35,19 @@ namespace UrLocal.Controllers
 
         // Http get will probably be more useful for getting the users login details and the users preferences will be passed through.
         [HttpGet]
-        public IActionResult GetUsers()
+        public IActionResult GetUsers([FromBody] Login log)
         {
-            return Ok(_db.users.ToList());
+            // Checks if the model for the login is completely valid returning it is incorrect if not
+            if (!ModelState.IsValid)
+            {
+                return Ok("Incorrectly input login");
+            }
+            // Queries the database for the particular username and password combination from the database
+            var user = from u in _db.users
+                       where (u.userName.Equals(log.username)&&u.Password.Equals(log.password))
+                       select u;
+            if (user != null) return Ok(user);
+            return Ok("Username or Password is incorrect");
         }
 
 
@@ -45,13 +56,16 @@ namespace UrLocal.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUsers([FromBody] Users objUsers)
         {
+            // Checks if the model structure is fully valid otherwise it will return that it is not valid.
             if (!ModelState.IsValid)
-            {
+            { 
                 return new JsonResult("Error While Creating New User");
             }
+            // Adds the user inputted into the database
             _db.users.Add(objUsers);
+            // Waits and makes sure the database saves the changes
             await _db.SaveChangesAsync();
-
+            // Returns to the front end that the user has been inserted into the bar.
             return new JsonResult("User inserted successfully");
         }
 

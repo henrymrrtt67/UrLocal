@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Data.UrLocal;
+using UrLocal.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -35,11 +36,40 @@ namespace UrLocal.Controllers
         /* Edit this so that it passes through a login model through this so that it will only purely return OK and the 
          * list of the local bars, in which I will be able to get the location from this JSON.
          */
+
+        // First Passes through the Login Preferences from the body that is passed through the API
         [HttpGet]
-        public IActionResult GetBars()
+        public IActionResult GetBars([FromBody] Login log)
         {
-            return Ok(_db.bars.ToList());
-            
+            // Creates the instance of the K nearest Neighbour that is used to find the most suitable bar
+            K_Nearest_Neighbour nearestBar = new K_Nearest_Neighbour();
+            // Stores the best Bar ID
+            int barID = 0;
+            // Makes sure that the JSON body passed is a valid model, and then returns that the connection was okay but the
+            // values passed were not
+            if (!ModelState.IsValid)
+            {
+                return Ok("Connected but incorrect login");
+            }
+            // Checks if there is a userName and Password under what is entered
+            var userValues = from u in _db.users
+                             where (u.userName.Equals(log.username) && u.Password.Equals(log.password))
+                             select u;
+            // places all of the bars from the database into a list 
+            List<Bars> bars = _db.bars.ToList();
+            if (userValues != null) {
+                // Transfers the user into a User Model so it can be passed.
+                Users u = userValues.ToList()[0];
+                // foreach through each of the bars and place them through the nearest bar so the best bar for the user is found
+                foreach (Bars b in bars) barID = nearestBar.testing(u,b);
+            }
+            // Gets the particular bar in a form that can be returned to the user
+            var bBar = from b in _db.bars
+                       where b.barId.Equals(barID)
+                       select b;
+            if(bBar != null) return Ok(bBar.ToList()[0]);
+            // if nothing is found then it is assumed it is due to incorrect passwords.
+            return Ok("Username or Password incorrect, please try again.");
         }
 
 
@@ -52,13 +82,16 @@ namespace UrLocal.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBar([FromBody] Bars objBars)
         {
+            // Checks if the model is valid from the body and returns that this is incorrect
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Error While Creating New Bar");
             }
+            // Adds the bar to the database if this is correct.
             _db.bars.Add(objBars);
+            // Waits and checks that the changes are saved within the database.
             await _db.SaveChangesAsync();
-
+            // Returns that the Bar has been inserted into the database.
             return new JsonResult("Bar inserted successfully");
         }
 
