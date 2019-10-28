@@ -36,10 +36,15 @@ namespace UrLocal.Controllers
         /* Edit this so that it passes through a login model through this so that it will only purely return OK and the 
          * list of the local bars, in which I will be able to get the location from this JSON.
          */
+         [HttpGet]
+         public IActionResult getBars()
+        {
+            return Ok(_db.bars.ToList());
+        }
 
         // First Passes through the Login Preferences from the body that is passed through the API
-        [HttpGet]
-        public IActionResult GetBars([FromBody] Login log)
+        [HttpPost("barPreference")]
+        public async Task<IActionResult> GetBarsPreference([FromBody] Login log)
         {
             // Creates the instance of the K nearest Neighbour that is used to find the most suitable bar
             K_Nearest_Neighbour nearestBar = new K_Nearest_Neighbour();

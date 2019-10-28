@@ -35,21 +35,26 @@ namespace UrLocal.Controllers
 
         // Http get will probably be more useful for getting the users login details and the users preferences will be passed through.
         [HttpGet]
-        public IActionResult GetUsers([FromBody] Login log)
+        public IActionResult GetUsers()
+        {
+            // Checks if the model for the login is completely valid returning it is incorrect if not
+            return Ok(_db.users.ToList());
+        }
+        [HttpPost("login")]
+        public async Task<IActionResult> login([FromBody] Login log)
         {
             // Checks if the model for the login is completely valid returning it is incorrect if not
             if (!ModelState.IsValid)
             {
-                return Ok("Incorrectly input login");
+                return new JsonResult("Incorrectly input login");
             }
             // Queries the database for the particular username and password combination from the database
             var user = from u in _db.users
-                       where (u.userName.Equals(log.username)&&u.Password.Equals(log.password))
+                       where (u.userName.Equals(log.username) && u.Password.Equals(log.password))
                        select u;
-            if (user != null) return Ok(user);
-            return Ok("Username or Password is incorrect");
+            if (user != null) return new JsonResult("Username and Password Found!");
+            return new JsonResult("Username or Password incorrect");
         }
-
 
         // creating new Users within the users database in where the object is passed through and then entered into the database.
         // the object is exactly mirrored like the model that is previously put through.
