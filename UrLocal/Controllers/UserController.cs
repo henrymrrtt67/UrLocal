@@ -38,7 +38,7 @@ namespace UrLocal.Controllers
         public IActionResult GetUsers()
         {
             // Checks if the model for the login is completely valid returning it is incorrect if not
-            return Ok(_db.users.ToList());
+            return Ok(_db.user_check.ToList());
         }
         [HttpPost("login")]
         public async Task<IActionResult> login([FromBody] Login log)
@@ -59,7 +59,7 @@ namespace UrLocal.Controllers
         // creating new Users within the users database in where the object is passed through and then entered into the database.
         // the object is exactly mirrored like the model that is previously put through.
         [HttpPost]
-        public async Task<IActionResult> AddUsers([FromBody] Users objUsers)
+        public async Task<IActionResult> AddUsers([FromBody] databaseInputUser objUsers)
         {
             // Checks if the model structure is fully valid otherwise it will return that it is not valid.
             if (!ModelState.IsValid)
@@ -67,7 +67,27 @@ namespace UrLocal.Controllers
                 return new JsonResult("Error While Creating New User");
             }
             // Adds the user inputted into the database
-            _db.users.Add(objUsers);
+            Users u = new Users();
+            u.userName = objUsers.userName;
+            u.Password = objUsers.Password;
+            _db.users.Add(u);
+            await _db.SaveChangesAsync();
+
+            Users user = _db.users.Find(u.userId);
+            int id = user.userId;
+            userPref up = new userPref();
+            up.user_id = id;
+            up.craft_slide = objUsers.craftSlide;
+            up.complexity = objUsers.Complexity;
+            up.price_range = objUsers.PriceRange;
+            _db.user_pref.Add(up);
+            await _db.SaveChangesAsync();
+            userCheck uc = new userCheck();
+            uc.user_id = id;
+            uc.wine = objUsers.WineCheck;
+            uc.beer = objUsers.BeerCheck;
+            uc.spirit = objUsers.SpiritCheck;
+            _db.user_check.Add(uc);
             // Waits and makes sure the database saves the changes
             await _db.SaveChangesAsync();
             // Returns to the front end that the user has been inserted into the bar.

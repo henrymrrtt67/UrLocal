@@ -1,5 +1,6 @@
 ﻿using System;
 using Data.UrLocal;
+using UrLocal.Models;
 
 namespace UrLocal
 {
@@ -19,36 +20,36 @@ namespace UrLocal
 
         // Passes both the users preferences and the bar
         // a comparison between the two is then made, and then
-        public int testing(Users u, Bars b)
+        public int testing(userPref u, barScore b, barCheck bc, userCheck uc)
         {
             double priceRange = 100.0;
-            int craftScore = u.craftSlide - b.craftSlide;
+            int craftScore = u.craft_slide - b.craft_slide;
             if (craftScore<0) craftScore *= -1;
-            int compScore = u.Complexity - b.complexity;
+            int compScore = u.complexity - b.complexity;
             if (compScore<0) compScore *= -1;
             int wineCheck = 0;
-            if (!u.WineCheck.Equals(b.wineCheck)) wineCheck += 5;
+            if (!uc.wine.Equals(bc.wine)) wineCheck += 5;
             int beerCheck = 0;
-            if (!u.BeerCheck.Equals(b.beerCheck)) beerCheck += 5;
+            if (!uc.beer.Equals(bc.beer)) beerCheck += 5;
             int spiritCheck = 0;
-            if (!u.SpiritCheck.Equals(b.spiritCheck)) spiritCheck += 5;
-            double price = u.PriceRange - b.lqMeal;
+            if (!uc.spirit.Equals(bc.spirit)) spiritCheck += 5;
+            double price = u.price_range - b.lqMeal;
             if (price < 0) price *= -1;
             if (price<priceRange) priceRange=price;
-            price = u.PriceRange + b.lqBeer;
+            price = u.price_range + b.lqBeer;
             if (price < 0) price *= -1;
             if (price < priceRange) priceRange = price;
-            price = u.PriceRange + b.uqMeal;
+            price = u.price_range + b.uqMeal;
             if (price < 0) price *= -1;
             if (price < priceRange) priceRange = price;
-            price = u.PriceRange + b.uqBeer;
+            price = u.price_range + b.uqBeer;
             if (price < 0) price *= -1;
             if (price < priceRange) priceRange = price;
             double totalScore = craftScore + compScore + wineCheck + beerCheck + spiritCheck + priceRange;
             // sets the current best bar based on the score, the smaller the value then the closer to the preferences of the user.
             if (best_bar_score > totalScore)
             {
-                best_bar_id = b.barId;
+                best_bar_id = b.bar_id;
                 best_bar_score = totalScore;
             }
             // returns the id of the best bar each time so the final result is that of the best bar for the user preferences.

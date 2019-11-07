@@ -14,29 +14,21 @@ namespace UrLocal
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int barId { get; set; }
 
-        public string barLocation { get; set; }
 
         // Other Attributes in my Bars table.
-        public string barName{ get; set; }
+        public string bar_name{ get; set; }
 
-        public int craftSlide { get; set; }
+        public int street_num { get; set; }
 
-        public int complexity { get; set; }
+        public string street_name { get; set; }
 
-        public bool wineCheck { get; set; }
+        public string suburb { get; set; }
 
-        public bool beerCheck { get; set; }
+        public string city { get; set; }
 
-        public bool spiritCheck { get; set; }
-
-        public double lqMeal { get; set; }
-
-        public double lqBeer { get; set; }
-
-        public double uqMeal { get; set; }
-
-        public double uqBeer { get; set; }
-
-
+        public static implicit operator int(Bars v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

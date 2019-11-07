@@ -25,19 +25,58 @@ namespace UrLocal.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("barLocation")
+                    b.Property<string>("bar_name")
                         .HasColumnType("text");
 
-                    b.Property<string>("barName")
+                    b.Property<string>("city")
                         .HasColumnType("text");
 
-                    b.Property<bool>("beerCheck")
+                    b.Property<string>("street_name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("street_num")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("suburb")
+                        .HasColumnType("text");
+
+                    b.HasKey("barId");
+
+                    b.ToTable("bars");
+                });
+
+            modelBuilder.Entity("UrLocal.Models.barCheck", b =>
+                {
+                    b.Property<int>("bar_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<bool>("beer")
                         .HasColumnType("boolean");
+
+                    b.Property<bool>("spirit")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("wine")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("bar_id");
+
+                    b.ToTable("bar_check");
+                });
+
+            modelBuilder.Entity("UrLocal.Models.barScore", b =>
+                {
+                    b.Property<int>("bar_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("complexity")
                         .HasColumnType("integer");
 
-                    b.Property<int>("craftSlide")
+                    b.Property<int>("craft_slide")
                         .HasColumnType("integer");
 
                     b.Property<double>("lqBeer")
@@ -46,21 +85,57 @@ namespace UrLocal.Migrations
                     b.Property<double>("lqMeal")
                         .HasColumnType("double precision");
 
-                    b.Property<bool>("spiritCheck")
-                        .HasColumnType("boolean");
-
                     b.Property<double>("uqBeer")
                         .HasColumnType("double precision");
 
                     b.Property<double>("uqMeal")
                         .HasColumnType("double precision");
 
-                    b.Property<bool>("wineCheck")
+                    b.HasKey("bar_id");
+
+                    b.ToTable("bar_score");
+                });
+
+            modelBuilder.Entity("UrLocal.Models.userCheck", b =>
+                {
+                    b.Property<int>("user_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<bool>("beer")
                         .HasColumnType("boolean");
 
-                    b.HasKey("barId");
+                    b.Property<bool>("spirit")
+                        .HasColumnType("boolean");
 
-                    b.ToTable("bars");
+                    b.Property<bool>("wine")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("user_id");
+
+                    b.ToTable("user_check");
+                });
+
+            modelBuilder.Entity("UrLocal.Models.userPref", b =>
+                {
+                    b.Property<int>("user_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("complexity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("craft_slide")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("price_range")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("user_id");
+
+                    b.ToTable("user_pref");
                 });
 
             modelBuilder.Entity("UrLocal.Users", b =>
