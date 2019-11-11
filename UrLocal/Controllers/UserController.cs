@@ -34,16 +34,38 @@ namespace UrLocal.Controllers
         // Once Get is called for this controller then it is getting all relevant Bars
 
         // Http get will probably be more useful for getting the users login details and the users preferences will be passed through.
+        [HttpGet("{id}")]
+        public IActionResult getPref([FromRoute] int id)
+        {
+            if(_db.users.Find(id) != null)
+            {
+                Users u = _db.users.Find(id);
+                userPref up = _db.user_pref.Find(id);
+                userCheck uc = _db.user_check.Find(id);
+                databaseInputUser user = new databaseInputUser();
+                user.craftSlide = up.craft_slide;
+                user.Complexity = up.complexity;
+                user.PriceRange = up.price_range;
+                user.WineCheck = uc.wine;
+                user.BeerCheck = uc.beer;
+                user.SpiritCheck = uc.spirit;
+                return Ok(user);
+            }
+            return NotFound();
+        }
         [HttpGet]
         public IActionResult GetUsers()
         {
             // Checks if the model for the login is completely valid returning it is incorrect if not
+
             return Ok(_db.user_check.ToList());
         }
         [HttpPost("login")]
         public async Task<IActionResult> login([FromBody] Login log)
         {
-            // Checks if the model for the login is completely valid returning it is incorrect if not
+            // Checks if the model for the login is completely valid returning it is incorrect if 
+            Console.WriteLine(log.username);
+            Console.WriteLine(log.password);
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Incorrectly input login");
@@ -51,8 +73,13 @@ namespace UrLocal.Controllers
             // Queries the database for the particular username and password combination from the database
             var user = from u in _db.users
                        where (u.userName.Equals(log.username) && u.Password.Equals(log.password))
+                       orderby u.userId
                        select u;
-            if (user != null) return new JsonResult("Username and Password Found!");
+            foreach (var u in user)
+            {
+                Console.WriteLine(u.userId);
+                if (u != null) return new JsonResult(u.userId);
+            }
             return new JsonResult("Username or Password incorrect");
         }
 
@@ -96,7 +123,7 @@ namespace UrLocal.Controllers
 
         // Updating User details, more importantly when they change their bar preference
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] Users objUser)
+        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] databaseInputUser objUser)
         {
             if (objUser == null || id != objUser.userId)
             {
@@ -104,7 +131,18 @@ namespace UrLocal.Controllers
             }
             else
             {
-                _db.users.Update(objUser);
+                userPref up = new userPref();
+                up.user_id = id;
+                up.craft_slide = objUser.craftSlide;
+                up.complexity = objUser.Complexity;
+                up.price_range = objUser.PriceRange;
+                _db.user_pref.Update(up);
+                userCheck uc = new userCheck();
+                uc.user_id = objUser.userId;
+                uc.wine = objUser.WineCheck;
+                uc.beer = objUser.BeerCheck;
+                uc.spirit = objUser.SpiritCheck;
+                _db.user_check.Update(uc);
                 await _db.SaveChangesAsync();
 
                 return new JsonResult("User has been updated");
@@ -118,10 +156,14 @@ namespace UrLocal.Controllers
         public async Task<IActionResult> DeleteUser([FromRoute]int id)
         {
             var findUser = await _db.users.FindAsync(id);
+            var findUserCheck = await _db.user_check.FindAsync(id);
+            var findUserPref = await _db.user_pref.FindAsync(id);
             if (findUser == null) return NotFound();
             else
             {
                 _db.users.Remove(findUser);
+                _db.user_check.Remove(findUserCheck);
+                _db.user_pref.Remove(findUserPref);
                 await _db.SaveChangesAsync();
 
                 return new JsonResult("User Was Removed Successfully");
