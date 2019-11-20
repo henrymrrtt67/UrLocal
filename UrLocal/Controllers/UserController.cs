@@ -35,9 +35,48 @@ namespace UrLocal.Controllers
 
         // Http get will probably be more useful for getting the users login details and the users preferences will be passed through.
         [HttpGet("{id}")]
-        public IActionResult getPref([FromRoute] int id)
+        public IActionResult getPrefBar([FromRoute] int id)
         {
             if(_db.users.Find(id) != null)
+            {
+                K_Nearest_Neighbour knn = new K_Nearest_Neighbour();
+                Users u = _db.users.Find(id);
+                userPref up = _db.user_pref.Find(id);
+                userCheck uc = _db.user_check.Find(id);
+                databaseInputUser user = new databaseInputUser();
+                user.craftSlide = up.craft_slide;
+                user.Complexity = up.complexity;
+                user.PriceRange = up.price_range;
+                user.WineCheck = uc.wine;
+                user.BeerCheck = uc.beer;
+                user.SpiritCheck = uc.spirit;
+                int bbid = 0;
+                foreach (Bars b in _db.bars.ToArray())
+                {
+                    int currentID = b.barId;
+                    barScore bs =  _db.bar_score.Find(currentID);
+                    barCheck bc = _db.bar_check.Find(currentID);
+                    databaseInputBars db = new databaseInputBars();
+                    db.bar_id = b.barId;
+                    db.craftSlide = bs.craft_slide;
+                    db.complexity = bs.complexity;
+                    db.lqBeer = (int)bs.lqBeer;
+                    db.lqMeal = (int)bs.lqMeal;
+                    db.uqBeer = (int)bs.uqBeer;
+                    db.uqMeal = (int)bs.uqMeal;
+                    db.beerCheck = bc.beer;
+                    db.wineCheck = bc.wine;
+                    db.spiritCheck = bc.spirit;
+                    bbid = knn.testing(user, db);
+                }
+                return Ok(_db.bars.Find(bbid));
+            }
+            return NotFound();
+        }
+        [HttpGet("userPref/{id}")]
+        public IActionResult getUserPref([FromRoute] int id)
+        {
+            if (_db.users.Find(id) != null)
             {
                 Users u = _db.users.Find(id);
                 userPref up = _db.user_pref.Find(id);
@@ -53,6 +92,7 @@ namespace UrLocal.Controllers
             }
             return NotFound();
         }
+
         [HttpGet]
         public IActionResult GetUsers()
         {
@@ -77,8 +117,14 @@ namespace UrLocal.Controllers
                        select u;
             foreach (var u in user)
             {
-                Console.WriteLine(u.userId);
-                if (u != null) return new JsonResult(u.userId);
+                if (u.Password.Equals(log.password)&&u.userName.Equals(log.username)) {
+                    Console.WriteLine(u.userId);
+                    if (u != null) return new JsonResult(u.userId);
+                }
+                else
+                {
+                    return new JsonResult(-1);
+                }
             }
             return new JsonResult("Username or Password incorrect");
         }

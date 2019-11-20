@@ -20,29 +20,29 @@ namespace UrLocal
 
         // Passes both the users preferences and the bar
         // a comparison between the two is then made, and then
-        public int testing(userPref u, barScore b, barCheck bc, userCheck uc)
+        public int testing(databaseInputUser u, databaseInputBars b)
         {
             double priceRange = 100.0;
-            int craftScore = u.craft_slide - b.craft_slide;
+            int craftScore = u.craftSlide - b.craftSlide;
             if (craftScore<0) craftScore *= -1;
-            int compScore = u.complexity - b.complexity;
+            int compScore = u.Complexity - b.complexity;
             if (compScore<0) compScore *= -1;
             int wineCheck = 0;
-            if (!uc.wine.Equals(bc.wine)) wineCheck += 5;
+            if (!u.WineCheck.Equals(b.wineCheck)) wineCheck += 5;
             int beerCheck = 0;
-            if (!uc.beer.Equals(bc.beer)) beerCheck += 5;
+            if (!u.BeerCheck.Equals(b.beerCheck)) beerCheck += 5;
             int spiritCheck = 0;
-            if (!uc.spirit.Equals(bc.spirit)) spiritCheck += 5;
-            double price = u.price_range - b.lqMeal;
+            if (!u.SpiritCheck.Equals(b.spiritCheck)) spiritCheck += 5;
+            double price = u.PriceRange - b.lqMeal;
             if (price < 0) price *= -1;
             if (price<priceRange) priceRange=price;
-            price = u.price_range + b.lqBeer;
+            price = u.PriceRange + b.lqBeer;
             if (price < 0) price *= -1;
             if (price < priceRange) priceRange = price;
-            price = u.price_range + b.uqMeal;
+            price = u.PriceRange + b.uqMeal;
             if (price < 0) price *= -1;
             if (price < priceRange) priceRange = price;
-            price = u.price_range + b.uqBeer;
+            price = u.PriceRange + b.uqBeer;
             if (price < 0) price *= -1;
             if (price < priceRange) priceRange = price;
             double totalScore = craftScore + compScore + wineCheck + beerCheck + spiritCheck + priceRange;
